@@ -16,4 +16,12 @@ export default Users;
 
 async function postCreateHook(request: PayloadRequest) {
   const transactionId = await request.payload.db.beginTransaction();
+  const users = await request.payload.find({
+    collection: 'users',
+    req: {
+      payload: request.payload,
+      transactionID: transactionId ?? undefined,
+    } as PayloadRequest
+  });
+  await request.payload.db.commitTransaction(transactionId);
 }
