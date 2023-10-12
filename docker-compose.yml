@@ -5,26 +5,49 @@ services:
     image: node:18-alpine
     ports:
       - '3000:3000'
+    networks:
+      - mongo-network
     volumes:
       - .:/home/node/app
       - node_modules:/home/node/app/node_modules
     working_dir: /home/node/app/
-    command: sh -c "yarn install && yarn dev"
+    command: sh -c "npm i && npm run dev"
     depends_on:
-      - mongo
+      - mongo1
     env_file:
       - .env
 
-  mongo:
-    image: mongo:latest
+  mongo1:
+    hostname: mongo1
+    image: mongo
+    expose:
+      - 27017
     ports:
-      - '27017:27017'
-    command:
-      - --storageEngine=wiredTiger
+      - "27017:27017"
     volumes:
       - data:/data/db
-    logging:
-      driver: none
+    restart: always
+    command: mongod --replSet payload
+    networks:
+      - mongo-network
+
+  mongoinit:
+    image: mongo
+    restart: "no"
+    depends_on:
+      - mongo1
+    networks:
+      - mongo-network
+    command: >
+      mongosh --host mongo1:27017 --eval  ' db = (new Mongo("mongo1:27017")).getDB("myDb"); config = { "_id" : "payload", "members" : [
+        {
+          "_id" : 0,
+          "host" : "mongo1:27017"
+        }
+      ] }; rs.initiate(config); '        
+
+networks:
+  mongo-network:
 
 volumes:
   data:

@@ -2,6 +2,13 @@ import {CollectionConfig} from 'payload/types';
 
 export const Pages: CollectionConfig = {
   slug: 'pages',
+  hooks: {
+    afterRead: [
+      async () => await new Promise<void>(resolve => {
+        setTimeout(resolve, 1500);
+      }),
+    ]
+  },
   fields: [
     {
       type: "array",
