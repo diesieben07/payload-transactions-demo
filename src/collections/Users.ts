@@ -6,6 +6,22 @@ const Users: CollectionConfig = {
   admin: {
     useAsTitle: 'email',
   },
+  hooks: {
+    afterRead: [
+      async ({req}) => {
+        console.log('users after read, transactionID', req.transactionID);
+        // await new Promise<void>(resolve => {
+        //   setTimeout(resolve, 1500);
+        // });
+      },
+    ]
+  },
+  access: {
+    read: ({req}) => {
+      console.log('users access check, transactionID', req.transactionID);
+      return true;
+    },
+  },
   fields: [
     // Email added by default
     // Add more fields as needed

@@ -7,6 +7,8 @@ import { buildConfig } from 'payload/config'
 
 import Users from './collections/Users'
 import {Pages} from './collections/Pages';
+import {Global1} from './globals/Global1';
+import {Global2} from './globals/Global2';
 
 export default buildConfig({
   admin: {
@@ -15,6 +17,7 @@ export default buildConfig({
   },
   editor: slateEditor({}),
   collections: [Users, Pages],
+  globals: [Global1, Global2],
   typescript: {
     outputFile: path.resolve(__dirname, 'payload-types.ts'),
   },

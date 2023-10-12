@@ -1,27 +1,27 @@
 diff --git a/node_modules/@payloadcms/db-mongodb/dist/transactions/beginTransaction.js b/node_modules/@payloadcms/db-mongodb/dist/transactions/beginTransaction.js
-index 83ee69f..12082d2 100644
+index 83ee69f..d5741c3 100644
 --- a/node_modules/@payloadcms/db-mongodb/dist/transactions/beginTransaction.js
 +++ b/node_modules/@payloadcms/db-mongodb/dist/transactions/beginTransaction.js
 @@ -29,6 +29,7 @@ const beginTransaction = async function beginTransaction(options = {}) {
          if (this.sessions[id].inTransaction()) {
              this.payload.logger.warn('beginTransaction called while transaction already exists');
          } else {
-+            console.log('begin transaction', id);
++            console.trace('begin transaction', id);
              await this.sessions[id].startTransaction(options);
          }
      }
 diff --git a/node_modules/@payloadcms/db-mongodb/dist/transactions/commitTransaction.js b/node_modules/@payloadcms/db-mongodb/dist/transactions/commitTransaction.js
-index d70563e..91abdbe 100644
+index d70563e..a808a67 100644
 --- a/node_modules/@payloadcms/db-mongodb/dist/transactions/commitTransaction.js
 +++ b/node_modules/@payloadcms/db-mongodb/dist/transactions/commitTransaction.js
 @@ -10,10 +10,14 @@ Object.defineProperty(exports, "commitTransaction", {
  });
  const commitTransaction = async function commitTransaction(id) {
      if (!this.sessions[id]?.inTransaction()) {
-+        console.warn('commit transaction while session is not in transaction', id);
++        console.log('commit transaction while session is not in transaction', id);
          return;
      }
-+    console.log('commitTransaction', id);
++    console.trace('commitTransaction', id);
      await this.sessions[id].commitTransaction();
 +    console.log('endSession', id);
      await this.sessions[id].endSession();

@@ -4,10 +4,19 @@ export const Pages: CollectionConfig = {
   slug: 'pages',
   hooks: {
     afterRead: [
-      async () => await new Promise<void>(resolve => {
-        setTimeout(resolve, 1500);
-      }),
+      async ({req}) => {
+        console.log('pages after read, transactionID', req.transactionID);
+        // await new Promise<void>(resolve => {
+        //   setTimeout(resolve, 1500);
+        // });
+      },
     ]
+  },
+  access: {
+    read: ({req}) => {
+      console.log('pages access check, transactionID', req.transactionID);
+      return true;
+    },
   },
   fields: [
     {
